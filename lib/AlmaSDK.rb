@@ -1,5 +1,3 @@
 require "AlmaSDK/version"
-
-module AlmaSDK
-  # Your code goes here...
-end
+require "AlmaSDK/services/record_service"
+require "AlmaSDK/services/user_service"
