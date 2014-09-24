@@ -8,15 +8,10 @@ class GenericService
     attr_accessor :service
   end
 
-  def initialize(user = 'API01', institution = '32KUL_KUL', password = 'Nc7gmYGx')
-#    @api_key  = 'l7xx95f21c81868848df96d7b780ae61a2df'
-    #@base_url = 'https://api-eu.hosted.exlibrisgroup.com'
+  def initialize(user = 'API01', institution = '32KUL_KUL', password = '')
     @base_url = 'http://eu.alma.exlibrisgroup.com'
 
-
-
     @connection = Faraday.new( url: "#{@base_url}") do |f|
-     # f.headers['Authorization'] = "apikey #{@api_key}"
       f.use Faraday::Response::Logger
       f.adapter :net_http
     end
@@ -26,8 +21,8 @@ class GenericService
 
   def find(id, options = {})
     service = self.class.service.downcase
-    url = "/almaws/v1/#{service}s/#{id}"
-    url += "?#{options.to_a.map {|a| "#{a[0]}=#{a[1]}"}.join('&')}" unless options.empty?
+    url = "/almaws/v1/#{service}s/#{URI::escape(id)}"
+    url += "?#{options.to_a.map {|a| "#{a[0]}=#{CGI::escape(a[1])}"}.join('&')}" unless options.empty?
 
     response = @connection.get url
 
